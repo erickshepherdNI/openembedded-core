@@ -21,8 +21,6 @@ REQUIRED_DISTRO_FEATURES = "x11"
 EXTRA_OEMAKE += "FCCACHE=/bin/true UTIL_DIR=${STAGING_DIR_TARGET}\$\(MAPFILES_PATH\)"
 
 do_install:append() {
-	find ${D}${libdir}/X11/fonts -type f -name fonts.dir | xargs rm -f
-	find ${D}${libdir}/X11/fonts -type f -name fonts.scale | xargs rm -f
 	find ${D}${datadir}/fonts/X11 -type f -name fonts.dir | xargs rm -f
 	find ${D}${datadir}/fonts/X11 -type f -name fonts.scale | xargs rm -f	
 }
@@ -30,11 +28,7 @@ do_install:append() {
 FILES:${PN} += " ${libdir}/X11/fonts ${datadir}"
 
 PACKAGE_WRITE_DEPS += "mkfontdir-native mkfontscale-native"
-pkg_postisnt_ontarget:${PN} () {
-        for fontdir in `find $D/usr/lib/X11/fonts -type d`; do
-                mkfontdir $fontdir
-                mkfontscale $fontdir
-        done
+pkg_postisnt:${PN} () {
         for fontdir in `find $D/usr/share/fonts/X11 -type d`; do
                 mkfontdir $fontdir
                 mkfontscale $fontdir
